@@ -1,6 +1,6 @@
 --[[
 ------------------------------------------------------------------------------
-LÖVE Table Viewer is licensed under the MIT Open Source License.
+Peep is licensed under the MIT Open Source License.
 (http://www.opensource.org/licenses/mit-license.html)
 ------------------------------------------------------------------------------
 
@@ -25,22 +25,22 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ]]--
 
--- LÖVE Table Viewer v0.1.0
+-- Peep v0.1.0
 
 local Debug	= {}
-local View	= {}
+local Peep	= {}
 local path	= ({...})[1]:gsub("[%.\\/]init$", "") .. '.'
 
 require(path .. "LoveFrames")
 
 function Debug.new(key, value)
-	local view = setmetatable({}, {__index = View})
-	view:newFrame(key, value)
+	local peep = setmetatable({}, {__index = Peep})
+	peep:newFrame(key, value)
 	
-	return view
+	return peep
 end
 
-function View:newFrame(key, value)
+function Peep:newFrame(key, value)
 	local frame = loveframes.Create("frame")
 	frame:SetName(key .. ": " .. tostring(value))
 	frame:SetSize(200, love.graphics.getHeight())
@@ -53,13 +53,14 @@ function View:newFrame(key, value)
 	list:SetSpacing(3)
 	
 	if type(value) == "table" then
-		for k, v in spairs(value) do
+		
+		for k, v in pairs(value) do
 			self:addItem(list, k, v)
 		end
 	end
 end
 
-function View:addItem(list, key, value)
+function Peep:addItem(list, key, value)
 	local item
 	
 	if type(value) == "table" then
@@ -76,44 +77,20 @@ function View:addItem(list, key, value)
 	list:AddItem(item)
 end
 
-function View:update(dt)
+function Peep:update(dt)
 	loveframes.update(dt)
 end
 
-function View:draw()
+function Peep:draw()
 	loveframes.draw()
 end
 
-function View:mousepressed(x, y, button)
+function Peep:mousepressed(x, y, button)
 	loveframes.mousepressed(x, y, button)
 end
 
-function View:mousereleased(x, y, button)
+function Peep:mousereleased(x, y, button)
 	loveframes.mousereleased(x, y, button)
-end
-
--- http://stackoverflow.com/questions/15706270/sort-a-table-in-lua
-function spairs(t, order)
-    -- collect the keys
-    local keys = {}
-    for k in pairs(t) do keys[#keys+1] = k end
-
-    -- if order function given, sort by it by passing the table and keys a, b,
-    -- otherwise just sort the keys 
-    if order then
-        table.sort(keys, function(a,b) return order(t, a, b) end)
-    else
-        table.sort(keys)
-    end
-
-    -- return the iterator function
-    local i = 0
-    return function()
-        i = i + 1
-        if keys[i] then
-            return keys[i], t[keys[i]]
-        end
-    end
 end
 
 return Debug

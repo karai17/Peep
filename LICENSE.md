@@ -1,4 +1,4 @@
-LÖVE Table Viewer
+Peep
 ==
 
 This code is licensed under the [**MIT Open Source License**][MIT].
