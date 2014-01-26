@@ -25,7 +25,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ]]--
 
--- Peep v0.1.0
+-- Peep v0.1.1
 
 local Debug	= {}
 local Peep	= {}
@@ -40,11 +40,18 @@ function Debug.new(key, value)
 	return peep
 end
 
-function Peep:newFrame(key, value)
+function Peep:newFrame(key, value, from)
 	local frame = loveframes.Create("frame")
-	frame:SetName(key .. ": " .. tostring(value))
+	frame:SetName(key .. " = " .. tostring(value))
 	frame:SetSize(200, love.graphics.getHeight())
 	frame:SetDockable(true)
+	
+	if from then
+		local x, y = from:GetPos()
+		local w, h = from:GetSize()
+		
+		frame:SetPos(x+w, 0)
+	end
 	
 	local list = loveframes.Create("list", frame)
 	list:SetPos(5, 30)
@@ -66,14 +73,14 @@ function Peep:addItem(list, key, value)
 	if type(value) == "table" then
 		item = loveframes.Create("button", list)
 		item.OnClick = function()
-			self:newFrame(key, value)
+			self:newFrame(key, value, list:GetParent())
 		end
 	else
 		item = loveframes.Create("textinput", list)
 		item:SetEditable(false)
 	end
 	
-	item:SetText(key .. ": " .. tostring(value))
+	item:SetText(key .. " = " .. tostring(value))
 	list:AddItem(item)
 end
 
